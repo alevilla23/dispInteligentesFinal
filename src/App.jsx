@@ -15,7 +15,6 @@ function App() {
       try {
         const data = await api.getallcards();
         setCards(data);
-        
       } catch (error) {
         console.error(error);
       }
@@ -23,17 +22,49 @@ function App() {
 
     loadCards();
   }, []);
-  
-  useEffect(() => {
-  console.log("CARDS ACTUALIZADO:", cards);
-}, [cards]);
+
+  async function handleUpdateCard(card) {
+    const likeinvertido = !card.like;
+
+    try {
+      // const updatedCard = await api.updateCard(card._id, likeinvertido);
+      setCards((cards) =>
+        cards.map((c) =>
+          c._id === card._id ? { ...c, like: likeinvertido } : c
+        )
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  async function handleDeleteCard(card) {
+    await api.deleteCard(card._id);
+
+    setCards((cards) => cards.filter((c) => c._id !== card._id));
+    try {
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  async function handleCreateCard(newCard) {
+    try {
+      const createCard = await api.createCard(newCard);
+      setCards((card) => [createCard, ...card]);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
-    
     <>
       <div>
         <Header />
-        <Main  cards={cards}/>
+        <Main
+          cards={cards}
+          onUpdateCard={handleUpdateCard}
+          onCreateCard={handleCreateCard}
+          onDeleteCard={handleDeleteCard}
+        />
         <Footer />
       </div>
     </>
