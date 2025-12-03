@@ -8,16 +8,16 @@ import api from "./Components/DataProvider/Api";
 
 function App() {
   const [cards, setCards] = useState([]);
-  useEffect(() => {
-    async function loadCards() {
-      try {
-        const data = await api.getallcards();
-        setCards(data);
-      } catch (error) {
-        console.error(error);
-      }
+  async function loadCards() {
+    try {
+      const data = await api.getallcards();
+      setCards(data);
+    } catch (error) {
+      console.error(error);
     }
+  }
 
+  useEffect(() => {
     loadCards();
   }, []);
 
@@ -39,10 +39,10 @@ function App() {
     await api.deleteCard(card._id);
 
     setCards((cards) => cards.filter((c) => c._id !== card._id));
-    try {
-    } catch (error) {
-      console.error(error);
-    }
+    // try {
+    // } catch (error) {
+    //   console.error(error);
+    // }
   }
   async function handleCreateCard(newCard) {
     try {
@@ -51,6 +51,7 @@ function App() {
     } catch (error) {
       console.error(error);
     }
+    loadCards();
   }
 
   return (
